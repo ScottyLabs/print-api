@@ -9,9 +9,7 @@
     - A single node that acts as the sole endpoint to the conversion and
       printing pipeline.
 
-    - Classifies and distributes file blobs to different converters.
-
-- Conversion node(s)
+- Conversion node
 
     - Convert the blobs to PDF.
 
@@ -31,7 +29,7 @@
 
 - Email `P0`
 
-    - Node.js IMAP cleint parses an email inbox provided by Gmail. `P0`
+    - Node.js IMAP clients parses an email inbox provided by Gmail. `P0`
 
     - Prints the attachments of a given email from an `@andrew.cmu.edu` email.
       `P0`
@@ -68,19 +66,9 @@
 
 - Maintains private API keys for the endpoint nodes to use. `P1`
 
-## Conversion Nodes
+## Conversion Node
 
-- Accept PDF. `P0`
-
-- Accept plain text (.txt, source code files). `P0`
-
-- Accept Microsoft Word, PowerPoint. `P1`
-
-- Accept various image formats. `P1`
-
-- Update job node with success or failure of conversion. `P1`
-
-- Accept a link and print a static website (like a course website). `P2`
+- Run it through LibreOffice.  (We're not kidding). `P0`
 
 ## Print Node
 
@@ -115,4 +103,3 @@
 - Simple admin panel to check master status and number of errors. `P2`
 
 - Add usage statistics to admin panel. `P2`
-
