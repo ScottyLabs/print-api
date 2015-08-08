@@ -9,7 +9,7 @@ var multer = require('multer');
 
 var storage = multer.diskStorage({
   destination: function (req, file, next) {
-    next(null, 'uploads');
+    next(null, './uploads');
   },
   filename: function (req, file, next) {
     var filename = req.params.andrewID + '-';
