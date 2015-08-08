@@ -5,7 +5,7 @@
 # @author Oscar Bezi, bezi@scottylabs.org
 
 # JSHint
-jshint ./src
+jshint --config config/jshintrc ./src
 
 # JSCS
-jscs ./src
+jscs -c config/jscsrc ./src
