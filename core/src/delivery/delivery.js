@@ -4,12 +4,14 @@
  */
 'use strict';
 
+// Requires.
 var express = require('express');
 var multer = require('multer');
+var config = require('config');
 
 var storage = multer.diskStorage({
   destination: function (req, file, next) {
-    next(null, './uploads');
+    next(null, config.get('delivery.upload-destination'));
   },
   filename: function (req, file, next) {
     var filename = req.params.andrewID + '-';
@@ -22,7 +24,7 @@ var storage = multer.diskStorage({
 var upload = multer({
   storage: storage,
   limits: {
-    fileSize: 100000000, // 100 MB
+    fileSize: config.get('delivery.upload-max-filesize'), // 100 MB
   },
 });
 

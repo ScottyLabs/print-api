@@ -1,0 +1,6 @@
+{
+    "delivery": {
+        "upload-destination": "./uploads",
+        "upload-max-filesize": 100000000
+    }
+}
