@@ -1,3 +1,4 @@
+# !/usr/bin/env bash
 # @file convert.sh
 # @brief Converts all files in SRC_DIR to pdfs and stores them in DEST_DIR.
 # @since 8 August 2015
@@ -5,7 +6,6 @@
 
 # Makes the script terminate on an error code.
 set -e;
-set -x;
 
 SRC_DIR="sample-files"
 DEST_DIR="output"
