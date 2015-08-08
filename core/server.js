@@ -6,6 +6,9 @@
 'use strict';
 
 var repl = require('./repl');
+var delivery = require('./delivery/delivery');
+
+delivery.start();
 
 repl.start();
 
