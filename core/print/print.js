@@ -7,7 +7,7 @@
 
 'use strict';
 
-var exec = require('child_process').exec
+var exec = require('child_process').exec;
 
 /**
  * @function printFile
@@ -24,7 +24,7 @@ function printFile(path, andrewid, jobid, options) {
 }
 
 var print = {
-  printFile: printFile
-}
+  printFile: printFile,
+};
 
 module.exports = print;
