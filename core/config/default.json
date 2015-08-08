@@ -1,6 +1,8 @@
 {
     "delivery": {
         "upload-destination": "./uploads",
-        "upload-max-filesize": 100000000
-    }
+        "upload-max-filesize": 100000000,
+        "port": 8080
+    },
+    "logdir": "./logs"
 }

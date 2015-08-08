@@ -5,10 +5,30 @@
 'use strict';
 
 // Requires.
-var express = require('express');
-var multer = require('multer');
 var config = require('config');
 
+// Logging setup.
+var morgan = require('morgan');
+var rotator = require('file-stream-rotator');
+
+// Two sets of logging
+// One is to STDOUT, which is the colored pretty-print.
+var stdoutLogger = morgan('dev');
+
+// The other is to a file and uses the Apache .log format
+var fileStream = rotator.getStream({
+  filename: config.get('logdir') + '/delivery-%DATE%.log',
+  frequency: 'daily',
+  verbose: false,
+  date_format: 'YYYY-MM-DD'
+});
+
+var fileLogger = morgan('combined', {
+  stream: fileStream,
+});
+
+// Multer setup.
+var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, next) {
     next(null, config.get('delivery.upload-destination'));
@@ -28,7 +48,12 @@ var upload = multer({
   },
 });
 
+// Express setup.
+var express = require('express');
 var app = express();
+
+app.use(stdoutLogger);
+app.use(fileLogger);
 
 // Turn on CORS for this endpoint.
 app.use(function (req, res, next) {
@@ -38,6 +63,7 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Use multer middleware.
 app.post('/upload/:andrewID', upload.array('toPrint'), function (req, res) {
   res.status(200);
   res.end('OK.');
@@ -51,7 +77,7 @@ app.get('/', function (req, res) {
  * @brief Starts the delivery node.
  */
 function start() {
-  app.listen(8080);
+  app.listen(config.get('delivery.port'));
 }
 
 module.exports = {
