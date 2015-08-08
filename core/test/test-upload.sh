@@ -11,12 +11,13 @@ SRC_DIR="sample-files"
 DEST_DIR="output"
 FILES=$(ls $SRC_DIR/*);
 
-ANDREW_IDS="odb jrgallag test"
+ANDREW_IDS="test"
 
 for id in $ANDREW_IDS;
 do
     for file in $FILES;
     do
-        curl -i -F "toPrint=@$file" http://localhost:8080/upload/$id
+        curl -F "toPrint=@$file" http://localhost:8080/upload/$id
+        echo; # newline
     done
 done

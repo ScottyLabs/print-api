@@ -5,6 +5,6 @@
  */
 'use strict';
 
-var delivery = require('./delivery/delivery');
+var delivery = require('./delivery');
 
 delivery.start();
