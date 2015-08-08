@@ -7,7 +7,20 @@
 // Requires.
 var config = require('config');
 
+// Express setup.
+var express = require('express');
+var app = express();
+
+// Turn on CORS for this endpoint.
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers',
+             'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+//
 // Logging setup.
+var fs = require('fs');
 var morgan = require('morgan');
 var rotator = require('file-stream-rotator');
 
@@ -16,8 +29,13 @@ var rotator = require('file-stream-rotator');
 var stdoutLogger = morgan('dev');
 
 // The other is to a file and uses the Apache .log format
+var logDir = config.get('log-dir');
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir);
+}
+
 var fileStream = rotator.getStream({
-  filename: config.get('logdir') + '/delivery-%DATE%.log',
+  filename: logDir + '/delivery-%DATE%.log',
   frequency: 'daily',
   verbose: false,
   date_format: 'YYYY-MM-DD',
@@ -27,11 +45,21 @@ var fileLogger = morgan('combined', {
   stream: fileStream,
 });
 
+app.use(stdoutLogger);
+app.use(fileLogger);
+
 // Multer setup.
 var multer = require('multer');
+
+var uploadDir = config.get('upload-dir');
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
 var storage = multer.diskStorage({
   destination: function (req, file, next) {
-    next(null, config.get('delivery.upload-destination'));
+    next(null, uploadDir);
   },
   filename: function (req, file, next) {
     var filename = req.params.andrewID + '-';
@@ -46,21 +74,6 @@ var upload = multer({
   limits: {
     fileSize: config.get('delivery.upload-max-filesize'), // 100 MB
   },
-});
-
-// Express setup.
-var express = require('express');
-var app = express();
-
-app.use(stdoutLogger);
-app.use(fileLogger);
-
-// Turn on CORS for this endpoint.
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers',
-             'Origin, X-Requested-With, Content-Type, Accept');
-  next();
 });
 
 // Use multer middleware.
