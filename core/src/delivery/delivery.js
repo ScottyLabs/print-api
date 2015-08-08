@@ -20,7 +20,7 @@ var fileStream = rotator.getStream({
   filename: config.get('logdir') + '/delivery-%DATE%.log',
   frequency: 'daily',
   verbose: false,
-  date_format: 'YYYY-MM-DD'
+  date_format: 'YYYY-MM-DD',
 });
 
 var fileLogger = morgan('combined', {

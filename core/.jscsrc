@@ -8,5 +8,6 @@
     "requireSpacesInFunctionExpression": {
         "beforeOpeningRoundBrace": true,
         "beforeOpeningCurlyBrace": true
-    }
+    },
+    "requireCamelCaseOrUpperCaseIdentifiers": null
 }
