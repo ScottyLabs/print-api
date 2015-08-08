@@ -36,8 +36,8 @@ function register(command, help, callback) {
  * @brief Print help text.
  */
 function help() {
-  console.log('Known commands:');
-  console.log('===============');
+  console.log('Known commands');
+  console.log('==============');
   if (_.isEmpty(commands)) {
     console.log('No commands registered.');
   } else {
