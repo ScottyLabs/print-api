@@ -10,7 +10,9 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^2.9.34",
-    "lodash": "^3.10.1"
+    "express": "^4.13.3",
+    "lodash": "^3.10.1",
+    "multer": "^1.0.3"
   },
   "devDependencies": {
     "nodemon": "^1.4.0"
