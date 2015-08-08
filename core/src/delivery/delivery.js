@@ -69,10 +69,6 @@ app.post('/upload/:andrewID', upload.array('toPrint'), function (req, res) {
   res.end('OK.');
 });
 
-app.get('/', function (req, res) {
-  res.sendFile('test.html', { root: __dirname });
-});
-
 /* @function start
  * @brief Starts the delivery node.
  */
