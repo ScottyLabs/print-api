@@ -8,16 +8,27 @@
 set -e;
 
 SRC_DIR="sample-files"
-DEST_DIR="output"
+DEST_DIR="../uploads"
 FILES=$(ls $SRC_DIR/*);
 
-ANDREW_IDS="test"
+ANDREW_IDS="TEST_ANDREW_ID";
 
 for id in $ANDREW_IDS;
 do
+    rm -f $DEST_DIR/$id*;
+
     for file in $FILES;
     do
         curl -F "toPrint=@$file" http://localhost:8080/upload/$id
-        echo; # newline
+        echo;
+
+        fname=$(basename "$file");
+        NEW_FILE="$DEST_DIR/$id-$fname";
+        if [ ! -e "$NEW_FILE" ]; then
+            echo "  |-- FAILED TO UPLOAD FILE.";
+            exit 1;
+        else
+            rm $NEW_FILE;
+        fi
     done
 done
