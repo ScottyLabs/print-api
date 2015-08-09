@@ -4,10 +4,12 @@
  */
 'use strict';
 
-// Requires.
+// Global config.
 var config = require('config');
 
+// ============================================================================
 // Express setup.
+
 var express = require('express');
 var app = express();
 
@@ -18,17 +20,21 @@ app.use(function (req, res, next) {
              'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
-//
+
+// End Express setup.
+// ============================================================================
+
+// ============================================================================
 // Logging setup.
+
 var fs = require('fs');
 var morgan = require('morgan');
 var rotator = require('file-stream-rotator');
 
-// Two sets of logging
-// One is to STDOUT, which is the colored pretty-print.
+// Console logger.
 var stdoutLogger = morgan('dev');
 
-// The other is to a file and uses the Apache .log format
+// File logger.
 var logDir = config.get('log-dir');
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir);
@@ -48,6 +54,10 @@ var fileLogger = morgan('combined', {
 app.use(stdoutLogger);
 app.use(fileLogger);
 
+// End logging setup.
+// ============================================================================
+
+// ============================================================================
 // Multer setup.
 var multer = require('multer');
 
@@ -63,8 +73,7 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, next) {
     var filename = req.params.andrewID + '-';
-    filename += file.originalname + '-';
-    filename += Date.now() % 10000;
+    filename += file.originalname;
     next(null, filename);
   },
 });
@@ -81,6 +90,9 @@ app.post('/upload/:andrewID', upload.array('toPrint'), function (req, res) {
   res.status(200);
   res.end('OK.');
 });
+
+// End Multer setup.
+// ============================================================================
 
 /* @function start
  * @brief Starts the delivery node.
