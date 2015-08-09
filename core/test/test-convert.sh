@@ -15,10 +15,18 @@ FILES=$(ls $SRC_DIR/*);
 mkdir -p $DEST_DIR;
 rm -f $DEST_DIR/*.pdf;
 
-for i in $FILES;
+for file in $FILES;
 do
-    echo "Processing $i";
-    soffice --headless --convert-to pdf $i --outdir $DEST_DIR > /dev/null 2>&1;
+    echo "Processing $file";
+    soffice --headless --convert-to pdf $file --outdir $DEST_DIR > /dev/null 2>&1;
+    fname=$(basename "$file");
+    NEW_FILE="$DEST_DIR/${fname%.*}.pdf";
+    if [ ! -e "$NEW_FILE" ]; then
+        echo "  |-- FAILED TO CREATE FILE.";
+        exit 1;
+    else
+        echo "  |-- Successfully created $NEW_FILE.";
+    fi
 done
 
 echo "Success!";
