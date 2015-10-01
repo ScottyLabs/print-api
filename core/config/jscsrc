@@ -1,0 +1,13 @@
+{
+    "preset": "node-style-guide",
+    "disallowSpacesInFunction": null,
+    "requireSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
+    },
+    "requireSpacesInFunctionExpression": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
+    },
+    "requireCamelCaseOrUpperCaseIdentifiers": null
+}
