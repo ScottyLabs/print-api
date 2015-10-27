@@ -51,6 +51,7 @@ function pickerCallback(data) {
     if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
         var doc = data[google.picker.Response.DOCUMENTS][0];
         url = doc[google.picker.Document.URL];
+        console.log(doc);
         console.log(url);
     }
 }
@@ -59,9 +60,21 @@ function pickerCallback(data) {
 options = {
     success: function(files) {
         var url = files[0].link;
-        console.log(url);
+        console.log(files[0]);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url);
+        xhr.responseType = "blob";
+        xhr.onload = function()
+        {
+            var blob = xhr.response;
+            console.log(blob);
+            var f = new File([blob], files[0].name);
+            console.log(f);
+        }
+        xhr.send();
     },
-    linkType: "preview",
+    linkType: "direct",
     multiselect: false,
     extensions: ['.pdf', '.doc', '.docx'],
 };
