@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print</title>
+
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="0jqk7oh47s7qkp3"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/api.js?onload=onApiLoad"></script>
+
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <script type="text/javascript" src="dist/dropzone.js"></script>
+    <link rel="stylesheet" href="dist/dropzone.css">
+
+</head>
+
+<body>
+    <div id="authorize">
+        <button id="gdrive-auth-button" onclick="driveBtnClick()">
+            Upload from Google Drive
+        </button>
+        <button id="dropbox-auth-button" onclick="dboxBtnClick()">
+            Upload from Dropbox
+        </button>
+    </div>
+
+    <form action="http://localhost:8080/upload/:hmuthaka" id="print-dropzone" class="dropzone"></form>
+
+    <script type="text/javascript" src="app.js"></script>
+</body>
+
+
+</html>
