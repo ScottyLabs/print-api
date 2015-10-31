@@ -19,7 +19,7 @@ do
 
     for file in $FILES;
     do
-        curl -F "toPrint=@$file" http://localhost:8080/upload/$id
+        curl -F "toPrint=@$file" http://print.scottylabs.org/api/v1/upload/$id
         echo;
 
         fname=$(basename "$file");
