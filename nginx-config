@@ -13,6 +13,11 @@ upstream api_v1 {
     server localhost:5020;
 }
 
+# Email backend.
+upstream email_service {
+    server localhost:5022;
+}
+
 server {
     listen 80;
     listen [::]:80;
@@ -26,5 +31,10 @@ server {
 
         # This is a file upload endpoint.
         client_max_body_size 50M;
+    }
+
+    location /email/ {
+        add_header 'Access-Control-Allow-Origin' '*';
+        proxy_pass http://email_service/;
     }
 }
