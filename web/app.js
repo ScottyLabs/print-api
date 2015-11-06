@@ -5,8 +5,8 @@ var SCOPES = [
     'https://www.googleapis.com/auth/drive.file',
 ];
 
- var pickerApiLoaded = false;
-      var oauthToken;
+var pickerApiLoaded = false;
+var oauthToken;
 
 function driveBtnClick() {
     gapi.load('auth', {'callback': onAuthApiLoad});
@@ -47,12 +47,25 @@ function createPicker() {
 }
 
 function pickerCallback(data) {
-    var url = '';
     if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
         var doc = data[google.picker.Response.DOCUMENTS][0];
-        url = doc[google.picker.Document.URL];
+        var doc_url = doc[google.picker.Document.URL];
+
         console.log(doc);
-        console.log(url);
+
+        var url = "https://www.googleapis.com/drive/v2/files/" + doc.id.toString();
+
+        var xhr = new XMLHttpRequest();
+        var accessToken = gapi.auth.getToken().access_token;
+        xhr.open("GET", url);
+        xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+        xhr.responseType = "json";
+        xhr.onload = function()
+        {
+            var blob = xhr.response;
+            console.log(blob);
+        }
+        xhr.send();
     }
 }
 
@@ -60,7 +73,6 @@ function pickerCallback(data) {
 options = {
     success: function(files) {
         var url = files[0].link;
-        console.log(files[0]);
 
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
@@ -68,7 +80,6 @@ options = {
         xhr.onload = function()
         {
             var blob = xhr.response;
-            console.log(blob);
             var f = new File([blob], files[0].name);
             console.log(f);
         }
@@ -83,6 +94,7 @@ function dboxBtnClick() {
     Dropbox.choose(options);
 }
 
+// direct file upload
 Dropzone.options.printDropzone = {
     init: function() {
         this.on("addedfile", function(file) {
