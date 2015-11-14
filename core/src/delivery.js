@@ -88,12 +88,13 @@ var upload = multer({
 });
 
 // Use multer middleware.
-//app.post('/upload/:andrewID', upload.array('toPrint'), function (req, res) {
-  //res.status(200);
-  //res.end('OK.');
-//});
 app.post('/upload/:andrewID', upload.array('toPrint'), function (req, res) {
-  console.log(Object.keys(req));
+  fs.readFile(req.files[0].path, function(err, data) {
+    var newPath = __dirname + req.files[0].path;
+    fs.writeFile(newPath, data, function (err) {
+      console.log("success");
+    });
+  });
   res.status(200);
   res.end('OK.');
 });

@@ -70,6 +70,16 @@ function pickerCallback(data) {
 }
 
 // dropbox upload
+
+function postFile(file) {
+    var formData = new FormData();
+    formData.append("toPrint", file);
+    var request = new XMLHttpRequest();
+    request.open("POST", "http://localhost:8080/upload/hmuthaka");
+    request.responseType = "json";
+    request.send(formData);
+}
+
 options = {
     success: function(files) {
         var url = files[0].link;
@@ -82,6 +92,7 @@ options = {
             var blob = xhr.response;
             var f = new File([blob], files[0].name);
             console.log(f);
+            postFile(f);
         }
         xhr.send();
     },
@@ -94,7 +105,8 @@ function dboxBtnClick() {
     Dropbox.choose(options);
 }
 
-// direct file upload
+// direct/drag-and-drop file upload
+
 Dropzone.options.printDropzone = {
     paramName: "toPrint",
     init: function()  {
