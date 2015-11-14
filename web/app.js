@@ -96,7 +96,8 @@ function dboxBtnClick() {
 
 // direct file upload
 Dropzone.options.printDropzone = {
-    init: function() {
+    paramName: "toPrint",
+    init: function()  {
         this.on("addedfile", function(file) {
             console.log(file);
         });

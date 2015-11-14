@@ -88,7 +88,12 @@ var upload = multer({
 });
 
 // Use multer middleware.
+//app.post('/upload/:andrewID', upload.array('toPrint'), function (req, res) {
+  //res.status(200);
+  //res.end('OK.');
+//});
 app.post('/upload/:andrewID', upload.array('toPrint'), function (req, res) {
+  console.log(Object.keys(req));
   res.status(200);
   res.end('OK.');
 });
