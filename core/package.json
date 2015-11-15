@@ -4,6 +4,7 @@
   "description": "Core backend server.",
   "main": "src/server.js",
   "scripts": {
+    "start": "node src/server.js",
     "lint": "test/lint.sh"
   },
   "author": "Oscar Bezi, bezi@scottylabs.org",
