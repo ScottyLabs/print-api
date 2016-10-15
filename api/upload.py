@@ -31,7 +31,7 @@ def upload():
         if file:
             # calling lp is something like this, but the pipe doesn't work
             #call(["lp","-t","lp str txt"],stdin=file.stream())
-            return redirect('/')
+            return 'Would have printed: '+file.filename
     return '''
     <!doctype html>
     <title>Upload new File</title>
