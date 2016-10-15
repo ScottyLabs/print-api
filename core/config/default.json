@@ -1,9 +1,0 @@
-{
-    "delivery": {
-        "upload-destination": "./uploads",
-        "upload-max-filesize": 100000000,
-        "port": 5020
-    },
-    "log-dir": "./logs",
-    "upload-dir": "./uploads"
-}
