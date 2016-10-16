@@ -1,11 +1,13 @@
 # Upload endpoint for the print api
+# Hacked together mess 
 from api import app
 import os
 from flask import request, redirect
 from werkzeug.utils import secure_filename
-from subprocess import call
+from subprocess import Popen, PIPE, STDOUT
 
-ALLOWED_EXTENSIONS = set(['pdf']) #add more types! lp can probably deal with it
+ALLOWED_EXTENSIONS = set(['pdf', 'txt']) #add more types! lp can probably deal with it
+# lp only takes PDF, postscript, and plaintext. Convert others to PDF
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -31,7 +33,19 @@ def upload():
         if file:
             # calling lp is something like this, but the pipe doesn't work
             #call(["lp","-t","lp str txt"],stdin=file.stream())
+            # Tradeoff between using pipes and writing temporary file:
+            # http://superuser.com/a/192391/537480
+
+            # Flask file info
+            # http://flask.pocoo.org/docs/0.11/api/#flask.Request.files
+            # http://werkzeug.pocoo.org/docs/0.11/datastructures/#werkzeug.datastructures.FileStorage
+            # Popen.communicate takes input as bytes
+            #print(file.read(), type(file)) => bytes, class werkzeug.datastructures.FileStorage
+            args = ["lp", "-t", "lp test "+file.filename]
+            p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=STDOUT)
+            p.communicate(input=file.read())
             return 'Would have printed: '+file.filename
+
     return '''
     <!doctype html>
     <title>Upload new File</title>
