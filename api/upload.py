@@ -1,17 +1,19 @@
 # Upload endpoint for the print api
 # Hacked together mess 
 from api import app
-import os
 from flask import request, redirect
+import os
 from werkzeug.utils import secure_filename
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE
+import api.convert
 
-ALLOWED_EXTENSIONS = set(['pdf', 'txt', 'docx']) 
+ALLOWED_EXTENSIONS = set(["pdf", "txt", "png", "jpg", "jpeg", "docx"]) 
 LP_EXTENSIONS = set(['pdf', 'txt'])
+UPLOAD_FOLDER = "/tmp/print"
 
 def allowed_file(filename):
     return '.' in filename and \
-        filename.rsplit('.', 1)[1] in LP_EXTENSIONS
+        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -35,10 +37,25 @@ def upload():
             # http://flask.pocoo.org/docs/0.11/api/#flask.Request.files
             # http://werkzeug.pocoo.org/docs/0.11/datastructures/#werkzeug.datastructures.FileStorage
             # Popen.communicate takes input as bytes
-            #print(file.read(), type(file)) => bytes, class werkzeug.datastructures.FileStorage
+            # print(file.read(), type(file)) => 
+            # bytes, class werkzeug.datastructures.FileStorage
+            
+            extension = file.filename.rsplit('.', 1)[1]
+            if extension not in LP_EXTENSIONS:
+                # Save temporary file and run convert
+                filename = secure_filename(file.filename)
+                if not os.path.exists(UPLOAD_FOLDER):
+                    os.makedirs(UPLOAD_FOLDER)
+                temp_path = os.path.join(UPLOAD_FOLDER, filename)
+                file.save(os.path.join(temp_path))
+                print("Saving temporary file to", temp_path)
+
+                api.convert.convert_file(temp_path, UPLOAD_FOLDER)
+                
+
             args = ["lp", "-t", "lp test "+file.filename]
-            p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=STDOUT)
-            p.communicate(input=file.read())
+            p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
+            outs, errs = p.communicate(input=file.read())
             return 'Would have printed: '+file.filename
 
     return '''
