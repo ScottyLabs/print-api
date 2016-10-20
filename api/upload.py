@@ -6,12 +6,12 @@ from flask import request, redirect
 from werkzeug.utils import secure_filename
 from subprocess import Popen, PIPE, STDOUT
 
-ALLOWED_EXTENSIONS = set(['pdf', 'txt']) #add more types! lp can probably deal with it
-# lp only takes PDF, postscript, and plaintext. Convert others to PDF
+ALLOWED_EXTENSIONS = set(['pdf', 'txt', 'docx']) 
+LP_EXTENSIONS = set(['pdf', 'txt'])
 
 def allowed_file(filename):
     return '.' in filename and \
-        filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+        filename.rsplit('.', 1)[1] in LP_EXTENSIONS
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -31,11 +31,6 @@ def upload():
             print('bad file type: ' + file.filename)
             return redirect(request.url)
         if file:
-            # calling lp is something like this, but the pipe doesn't work
-            #call(["lp","-t","lp str txt"],stdin=file.stream())
-            # Tradeoff between using pipes and writing temporary file:
-            # http://superuser.com/a/192391/537480
-
             # Flask file info
             # http://flask.pocoo.org/docs/0.11/api/#flask.Request.files
             # http://werkzeug.pocoo.org/docs/0.11/datastructures/#werkzeug.datastructures.FileStorage
