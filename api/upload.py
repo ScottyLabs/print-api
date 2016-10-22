@@ -1,7 +1,7 @@
 # Upload endpoint for the print api
 # Hacked together mess 
 from api import app
-from flask import request, redirect
+from flask import request, redirect, render_template
 import os
 from werkzeug.utils import secure_filename
 from subprocess import Popen, PIPE
@@ -71,12 +71,4 @@ def upload():
             outs, errs = p.communicate(input=p_stdin)
             return 'Would have printed: '+print_path
 
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+    return render_template("upload.html")
