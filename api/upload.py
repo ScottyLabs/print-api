@@ -7,10 +7,17 @@ from werkzeug.utils import secure_filename
 from subprocess import Popen, PIPE
 import api.convert
 
-ALLOWED_EXTENSIONS = set(["pdf", "txt", "png", "jpg", "jpeg", "docx"]) 
-LP_EXTENSIONS = set(['pdf', 'txt'])
+ALLOWED_EXTENSIONS = {"pdf", "txt", "png", "jpg", "jpeg", "docx"}
+LP_EXTENSIONS = {'pdf', 'txt'}
 UPLOAD_FOLDER = "/tmp/print"
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
+
+# Match POST "queue" values with server printer names
+QUEUE_NAMES = {"andrew": "AndrewCentralB&W",
+               "andrew-color": "AndrewColor",
+               "hunt-color": "n/a",
+               "mellon-color": "n/a",
+               "library-color": "n/a"}
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -64,7 +71,7 @@ def upload():
             args = ["lp",
                     "-U", andrew_id,
                     "-t", "lp test " + file.filename,
-                    #"-d", queue,  # Make sure printer names match POST queue values
+                    "-d", QUEUE_NAMES[queue],
                     "-n", copies,
                     "-o", "orientation-requested={} sides={}".format(
                         orientation_N, sides)
