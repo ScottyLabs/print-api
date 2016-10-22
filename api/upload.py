@@ -39,6 +39,10 @@ def upload():
             # Popen.communicate takes input as bytes
             # print(file.read(), type(file)) => 
             # bytes, class werkzeug.datastructures.FileStorage
+
+            # Use these
+            andrew_id = request.form["andrew_id"]
+            print("Form Andrew ID:", andrew_id)
             
             extension = file.filename.rsplit('.', 1)[1]
             args = ["lp", "-t", "lp test " + file.filename]
