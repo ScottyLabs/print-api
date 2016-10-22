@@ -1,9 +1,32 @@
 <!doctype html>
 <title>Upload new File</title>
-<h1>Upload new File</h1>
+<h1>Upload new file to print</h1>
+<p>HTML5 is recommended.</p> <!-- Number input min max attributes -->
 <form action="" method=post enctype=multipart/form-data>
-    <p>Andrew ID: <input type=text name="andrew_id"> </p>
-    <p><input type=file name=file>
-     <input type=submit value=Upload>
+    <p>Andrew ID: <input type="text" name="andrew_id"> </p>
+    <p>
+        Printing Queue: <br>
+        <input type="radio" name="queue" value="andrew" checked>Andrew B&W
+        <input type="radio" name="queue" value="andrew-color">Andrew Color (CFA, Wean)
+        <input type="radio" name="queue" value="hunt-color">Hunt Library Color
+        <input type="radio" name="queue" value="mellon-color">Mellon Institute Color
+        <input type="radio" name="queue" value="library-color">E&S Library Color
+    </p>
+    <p>Copies: <input type="number" name="copies" min="1" max="99" value="1"> </p>
+    <p>
+        Orientation: <br>
+        <input type="radio" name="orientation" value="portrait" checked>Portrait
+        <input type="radio" name="orientation" value="landscape">Landscape
+    </p>
+    <p>
+        Sides: <br>
+        <input type="radio" name="sides" value="one-sided">One side
+        <!-- Flip untested, lp man page unclear -->
+        <input type="radio" name="sides" value="two-sided-long-edge"> Both sides, flip on long edge
+        <input type="radio" name="sides" value="two-sided-short-edge"> Both sides, flip on short edge
+    </p>
+    <p>
+        <input type="file" name=file>
+        <input type="submit" value=Upload>
     </p>
 </form>

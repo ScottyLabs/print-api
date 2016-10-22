@@ -40,9 +40,17 @@ def upload():
             # print(file.read(), type(file)) => 
             # bytes, class werkzeug.datastructures.FileStorage
 
-            # Use these
+            # Use these as args for lp!
             andrew_id = request.form["andrew_id"]
-            print("Form Andrew ID:", andrew_id)
+            queue = request.form["queue"]
+            copies = request.form["copies"]
+            orientation = request.form["orientation"]
+            sides = request.form["sides"]
+            print("Form andrew_id:", andrew_id)
+            print("Form queue:", queue)
+            print("Form copies:", copies)
+            print("Form orientation:", orientation)
+            print("Form sides:", sides)
             
             extension = file.filename.rsplit('.', 1)[1]
             args = ["lp", "-t", "lp test " + file.filename]
