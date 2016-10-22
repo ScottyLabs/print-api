@@ -10,6 +10,7 @@ import api.convert
 ALLOWED_EXTENSIONS = set(["pdf", "txt", "png", "jpg", "jpeg", "docx"]) 
 LP_EXTENSIONS = set(['pdf', 'txt'])
 UPLOAD_FOLDER = "/tmp/print"
+app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -85,3 +86,8 @@ def upload():
             return 'Would have printed: '+print_path
 
     return render_template("upload.html")
+
+# Untested
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    return "File Too Large", 413
