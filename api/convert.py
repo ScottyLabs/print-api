@@ -31,7 +31,7 @@ def convert_file(file, filename, UPLOAD_FOLDER):
 
 
 if __name__ == "__main__":
-    # Testing
-    print(convert_file("examples/cube wallpaper.png"))
-
-
+    # Testing conversion
+    from werkzeug.datastructures import FileStorage
+    file = FileStorage(stream=open("examples/cube wallpaper.png", 'rb'))
+    print(convert_file(file, "cube_wallpaper.png", "/tmp/print/"))
