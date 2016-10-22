@@ -60,18 +60,13 @@ def upload():
             if extension not in LP_EXTENSIONS:
                 # Save temporary file and run convert
                 filename = secure_filename(file.filename)
-                if not os.path.exists(UPLOAD_FOLDER):
-                    os.makedirs(UPLOAD_FOLDER)
 
-                # Fix file naming (see issue #11)
-                temp_path = os.path.join(UPLOAD_FOLDER, filename)
-                file.save(os.path.join(temp_path))
-                print("Saving temporary file to", temp_path)
+                # Get converted file path
+                print_path = api.convert.convert_file(file, filename, UPLOAD_FOLDER)
+                if print_path == None:
+                    print("Conversion error")
 
-                # Where the magic happens
-                api.convert.convert_file(temp_path, UPLOAD_FOLDER)
                 # lp takes filename last
-                print_path = temp_path.rsplit('.', 1)[0] + ".pdf"
                 args.append(print_path)
                 p_stdin = None
 
