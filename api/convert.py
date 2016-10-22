@@ -16,8 +16,8 @@ def convert_file(file, filename, UPLOAD_FOLDER):
     p = Popen(args, stdout=PIPE, stderr=PIPE)
     try:
         outs, errs = p.communicate(timeout=10)
-        print("errs:", errs)
-        print("outs:", outs)
+        print("convert errs:", errs)
+        print("convert outs:", outs)
 
         if outs:  # Assume successful
             print_path = temp_path.rsplit('.', 1)[0] + ".pdf"

@@ -57,13 +57,23 @@ def upload():
             print("Form copies:", copies)
             print("Form orientation:", orientation)
             print("Form sides:", sides)
-            
-            extension = file.filename.rsplit('.', 1)[1]
-            args = ["lp", "-t", "lp test " + file.filename]
+
+            # https://login.cs.utexas.edu/facilities/documentation/printing-options
+            orientation_N = 4 if orientation == "landscape" else 3
+
+            args = ["lp",
+                    "-U", andrew_id,
+                    "-t", "lp test " + file.filename,
+                    #"-d", queue,  # Make sure printer names match POST queue values
+                    "-n", copies,
+                    "-o", "orientation-requested={} sides={}".format(
+                        orientation_N, sides)
+                    ]
 
             # If file needs to be converted, convert it to PDF and add filename
             # to args list. Otherwise send file to stdin.
             # Save temporary file and run convert
+            extension = file.filename.rsplit('.', 1)[1]
             if extension not in LP_EXTENSIONS:
                 filename = secure_filename(file.filename)
                 filename = unique_filename(filename, andrew_id)
@@ -77,12 +87,18 @@ def upload():
                 args.append(print_path)
                 p_stdin = None
 
+                print("lp convert args:", args)
+
             else:
                 print_path = file.filename
+                args.append('-')  # Force printing from stdin
                 p_stdin = file.read()
+                print("lp no-convert args:", args)
 
             p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
             outs, errs = p.communicate(input=p_stdin)
+            print("lp outs:", outs)
+            print("lp errs:", errs)
             return 'Would have printed: '+print_path
 
     return render_template("upload.html")
