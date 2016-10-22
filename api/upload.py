@@ -2,7 +2,7 @@
 # Hacked together mess 
 from api import app
 from flask import request, redirect, render_template
-import os
+import time
 from werkzeug.utils import secure_filename
 from subprocess import Popen, PIPE
 import api.convert
@@ -14,6 +14,11 @@ UPLOAD_FOLDER = "/tmp/print"
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+def unique_filename(filename, andrew_id):
+    # Use Andrew ID, filename, and unix timestamp to the nearest second
+    return str(int(time.time())) + andrew_id + '_' + filename
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -57,9 +62,10 @@ def upload():
 
             # If file needs to be converted, convert it to PDF and add filename
             # to args list. Otherwise send file to stdin.
+            # Save temporary file and run convert
             if extension not in LP_EXTENSIONS:
-                # Save temporary file and run convert
                 filename = secure_filename(file.filename)
+                filename = unique_filename(filename, andrew_id)
 
                 # Get converted file path
                 print_path = api.convert.convert_file(file, filename, UPLOAD_FOLDER)
