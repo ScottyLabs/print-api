@@ -59,11 +59,15 @@ def upload():
             copies = request.form["copies"]
             orientation = request.form["orientation"]
             sides = request.form["sides"]
+            use_page_list = request.form["use-page-list"]
+            page_list = request.form["page-list"]
+
             print("Form andrew_id:", andrew_id)
             print("Form queue:", queue)
             print("Form copies:", copies)
             print("Form orientation:", orientation)
             print("Form sides:", sides)
+            print("Form use-page-list, page-list:", use_page_list, page_list)
 
             # https://login.cs.utexas.edu/facilities/documentation/printing-options
             orientation_N = 4 if orientation == "landscape" else 3
@@ -76,6 +80,9 @@ def upload():
                     "-o", "orientation-requested={} sides={}".format(
                         orientation_N, sides)
                     ]
+
+            if use_page_list == "range":
+                args.extend(["-P", page_list])
 
             # If file needs to be converted, convert it to PDF and add filename
             # to args list. Otherwise send file to stdin.
