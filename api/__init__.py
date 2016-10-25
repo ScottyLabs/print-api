@@ -7,3 +7,5 @@ app = Flask(__name__)
 import api.index
 # Upload endpoint
 import api.upload
+# Print endpoint
+import api.printfile
