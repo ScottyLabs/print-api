@@ -9,7 +9,7 @@ app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
 FILE_KEY = 'file'
 ANDREW_ID_KEY = 'andrew_id'
 
-def response_print_error(request, err_description=None, code=500):
+def response_print_error(request=None, err_description=None, code=400):
     """ Returns a JSON response when printing a file fails. """
     # Request not handled here currently
     return jsonify(status_code=code, message=err_description)
@@ -66,5 +66,5 @@ def printfile():
 # Untested (NGINX will probably return first)
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    # Flask doesn't like returning JSON response
-    return "File too large", 413
+    # Response requires HTTP status code as well
+    return response_print_error(None, "File too large", 413), 413
