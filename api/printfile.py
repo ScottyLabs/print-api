@@ -1,6 +1,6 @@
 # Defines a POST endpoint that prints a file
 from api import app
-from flask import request, redirect, render_template
+from flask import request, redirect, render_template, jsonify
 from subprocess import Popen, PIPE
 
 LP_EXTENSIONS = {'pdf', 'txt'}
@@ -9,12 +9,14 @@ app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
 FILE_KEY = 'file'
 ANDREW_ID_KEY = 'andrew_id'
 
-def render_print_error(request, err_description=None):
-    """ Displays an error message when printing a file fails. """
-    if (err_description):
-        return render_template("print_error.html", description=err_description)
-    return render_template("print_error.html",
-                           description="Sorry, we don't know what went wrong :(")
+def response_print_error(request, err_description=None, code=500):
+    """ Returns a JSON response when printing a file fails. """
+    # Request not handled here currently
+    return jsonify(status_code=code, message=err_description)
+
+def response_print_success(success_description=None):
+    """Returns a JSON response of a successful print."""
+    return jsonify(status_code=200, message=success_description)
 
 def has_printable_file(request):
     """ Returns True if the request contains a printable file, False otherwise. """
@@ -35,11 +37,11 @@ def printfile():
     """ Prints any PDF or txt file to a specified andrewID's print queue. """
     # Ensure both a printable file and Andrew ID were provided in the request
     if not has_printable_file(request):
-        return render_print_error(request,
-            "Request does not contain a printable file. \
-            PDF and txt files under 25MB are supported.")
+        return response_print_error(request,
+            "Request does not contain a printable file. " +
+            "PDF and txt files under 25MB are supported.")
     if not has_andrew_id(request):
-        return render_print_error(request, "Please submit a valid Andrew ID.")
+        return response_print_error(request, "Please submit a valid Andrew ID.")
 
     # Retrieve file and andrew id from request
     file = request.files[FILE_KEY]
@@ -59,9 +61,10 @@ def printfile():
     outs, errs = p.communicate(input=file.read())
     print("lp outs:", outs)
     print("lp errs:", errs)
-    return 'Would have printed: ' + file.filename
+    return response_print_success("Successfully printed " + file.filename)
 
-# Untested
+# Untested (NGINX will probably return first)
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    return "File Too Large", 413
+    # Flask doesn't like returning JSON response
+    return "File too large", 413
