@@ -1,0 +1,183 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    padding-top: 70px;
+    margin: 0 0 65px;
+    background-color: #565f68;
+    font-family: 'Open Sans', 'sans-serif';
+    display: inline;
+}
+
+.navbar {
+    color: white;
+    background-color: #565f68;
+    border-bottom: none;
+}
+
+.navbar-nav {
+    float: right;
+}
+
+.title {
+    text-align: center;
+    font-weight: 400;
+    color: #5dc7fc;
+    font-size: 4em;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.page-title {
+    font-weight: 400;
+    color: #5dc7fc;
+    font-size: 4em;
+}
+
+.title-sub {
+    font-weight: 300;
+    color: white;
+    font-size: .4em;
+}
+
+.typed-cursor {
+    font-size: .4em;
+}
+
+.upload {
+    margin: 10px;
+    margin-top: 20px;
+    padding: 0.5em 1em 0.5em 1em;
+    color: white;
+    font-size: 0.3em;
+    background-color: #5dc7fc;
+    border-style: none;
+    -webkit-transition-duration: 0.4s;
+    /* Safari */
+    transition-duration: 0.4s;
+}
+
+.upload:active,
+.upload:focus,
+.upload:hover {
+    background-color: white;
+    color: #5dc7fc;
+}
+
+a {
+    color: #5dc7fc;
+}
+
+a:hover {
+    color: white;
+}
+
+#uploadpage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+.panel {
+    width: 500px;
+    height: 300px;
+    box-shadow: 5px 5px 0px 0px rgba(148, 214, 247, 0.5);
+}
+
+.panel > .panel-heading {
+    background-image: none;
+    background-color: #5dc7fc;
+    color: white;
+}
+
+.panel-title {
+    font-size: 1.5em;
+}
+
+label {
+    font-weight: 300;
+    padding-bottom: 10px;
+}
+
+.form-control {
+    width: 200px;
+    border: none;
+    border-radius: none;
+    box-shadow: none;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+    border-bottom-color: grey;
+}
+
+.form-control:active,
+.form-control:focus,
+.form-control:hover {
+    border-radius: none;
+    box-shadow: none;
+    border-bottom-color: #5dc7fc;
+}
+
+.panel-body {
+    font-size: 1.25em;
+}
+
+.form-group.sub {
+    font-size: 14px;
+}
+
+#sendbutton {
+    font-size: 0.8em;
+    float: right;
+    margin-top: -5px;
+}
+
+#sendbutton:active,
+#sendbutton:focus,
+#sendbutton:hover {
+    background-color: #565f68;
+    color: white;
+}
+
+.page {
+    padding: 70px;
+    color: white;
+}
+
+.page-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /* bring your own prefixes */
+    transform: translate(-50%, -50%);
+}
+
+#back {
+    color: white;
+    font-size: 16px;
+}
+
+#back:hover,
+#back:active,
+#back:hover,
+#back:visited {
+    color: white;
+    text-decoration: none;
+}
+
+footer {
+    font-size: 12px;
+    position: absolute;
+    color: white;
+    left: 0;
+    bottom: 0;
+    height: 65px;
+    width: 100%;
+    overflow: hidden;
+    margin-left: -10px;
+}
