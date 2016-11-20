@@ -9,7 +9,10 @@ Unified printing for CMU on multiple devices.
 |----------|---------------|
 |text      |andrew_id      |
 |file      |file           |
+|number    |copies         |
+|radio     |sides [1]      |
 
+[1] Values must be one of `one-sided`, `two-sided-long-edge`, `two-sided-short-edge`.
 
 ### JSON response
 
@@ -29,4 +32,3 @@ The status code will default to 400, Bad Request.
   "status_code": 400
 }
 ```
-
