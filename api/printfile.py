@@ -2,6 +2,7 @@
 from api import app
 from flask import request, redirect, render_template, jsonify
 from subprocess import Popen, PIPE
+from werkzeug.utils import secure_filename
 
 LP_EXTENSIONS = {'pdf', 'txt'}
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
@@ -30,7 +31,11 @@ def has_andrew_id(request):
     """ Returns True i the request contains a plausible andrewID. Does not
     guarantee that the string is in fact a valid andrewID. """
     # TODO: Test the validity of the andrewID with the directory API!
-    return request.form[ANDREW_ID_KEY] and len(request.form[ANDREW_ID_KEY]) > 0
+    # Currently just checks if ID is alphanumeric
+    if not request.form[ANDREW_ID_KEY] or len(request.form[ANDREW_ID_KEY]) < 1:
+        return False
+
+    return request.form[ANDREW_ID_KEY].isalnum()
 
 @app.route('/printfile', methods=['POST'])
 def printfile():
@@ -47,13 +52,15 @@ def printfile():
     file = request.files[FILE_KEY]
     andrew_id = request.form[ANDREW_ID_KEY]
 
+    filename = secure_filename(file.filename)
+
     # TODO Improve logging mechanism
-    print("%s printed %s" % (andrew_id, file.filename))
+    print("%s printed %s" % (andrew_id, filename))
 
     # Command line arguments for the lp command
     args = ["lp",
             "-U", andrew_id,
-            "-t", file.filename,
+            "-t", filename,
             "-", # Force printing from stdin
             ]
 
@@ -61,7 +68,7 @@ def printfile():
     outs, errs = p.communicate(input=file.read())
     print("lp outs:", outs)
     print("lp errs:", errs)
-    return response_print_success("Successfully printed " + file.filename)
+    return response_print_success("Successfully printed " + filename)
 
 # Untested (NGINX will probably return first)
 @app.errorhandler(413)
