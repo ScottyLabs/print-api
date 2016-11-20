@@ -9,6 +9,9 @@ app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
 
 FILE_KEY = 'file'
 ANDREW_ID_KEY = 'andrew_id'
+COPIES_KEY = "copies"
+SIDES_KEY = "sides"
+
 
 def response_print_error(request=None, err_description=None, code=400):
     """ Returns a JSON response when printing a file fails. """
@@ -49,13 +52,19 @@ def printfile():
         return response_print_error(request, "Please submit a valid Andrew ID.")
 
     # Retrieve file and andrew id from request
+    # TODO Ensure ALL values are sanitized
     file = request.files[FILE_KEY]
     andrew_id = request.form[ANDREW_ID_KEY]
+    copies = request.form[COPIES_KEY]
+    sides = request.form[SIDES_KEY]
+
 
     filename = secure_filename(file.filename)
 
     # TODO Improve logging mechanism
     print("%s printed %s" % (andrew_id, filename))
+    print("Form copies:", copies)
+    print("Form sides", sides)
 
     # Command line arguments for the lp command
     args = ["lp",

@@ -3,6 +3,13 @@
 <h1>Upload new file to print</h1>
 <form action="printfile" method=post enctype=multipart/form-data>
     <p>Andrew ID: <input type="text" name="andrew_id"> </p>
+    <p>Copies: <input type="number" name="copies" min="1" max="99" value="1"> </p>
+    <p>
+        Sides: <br>
+        <input type="radio" name="sides" value="one-sided" checked>One side
+        <input type="radio" name="sides" value="two-sided-long-edge"> Both sides, flip on long edge
+        <input type="radio" name="sides" value="two-sided-short-edge"> Both sides, flip on short edge
+    </p>
     <br>
     <p>
         <input type="file" name=file>

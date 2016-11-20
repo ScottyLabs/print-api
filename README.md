@@ -9,7 +9,7 @@ Unified printing for CMU on multiple devices.
 |----------|---------------|
 |text      |andrew_id      |
 |file      |file           |
-|submit    |-              |
+
 
 ### JSON response
 
