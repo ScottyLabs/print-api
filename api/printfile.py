@@ -70,8 +70,13 @@ def printfile():
     args = ["lp",
             "-U", andrew_id,
             "-t", filename,
+            "-n", copies,
+            "-o", "sides={}".format(sides),
             "-", # Force printing from stdin
             ]
+
+    # TODO Log args?
+    print(args)
 
     p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
     outs, errs = p.communicate(input=file.read())
