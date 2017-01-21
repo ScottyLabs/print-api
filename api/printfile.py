@@ -66,6 +66,10 @@ def printfile():
     print("Form copies:", copies)
     print("Form sides", sides)
 
+    if not copies.isdigit():
+        return response_print_error(request,
+                                    "Please enter a valid number of copies.")
+
     # Command line arguments for the lp command
     args = ["lp",
             "-U", andrew_id,
@@ -82,6 +86,9 @@ def printfile():
     outs, errs = p.communicate(input=file.read())
     print("lp outs:", outs)
     print("lp errs:", errs)
+    if errs:
+        # Return errors to JSON for now. Maybe security issue.
+        return response_print_error(request, "lp error:\n" + errs)
     return response_print_success("Successfully printed " + filename)
 
 # Untested (NGINX will probably return first)
