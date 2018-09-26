@@ -1,12 +1,33 @@
 <!doctype html>
-<title>Upload new File</title>
-<h1>Upload new file to print</h1>
-<form action="printfile" method=post enctype=multipart/form-data>
-    <p>Andrew ID: <input type="text" name="andrew_id"> </p>
-    <br>
-    <p>
-        <input type="file" name=file>
-        <input type="submit" value=Upload>
-    </p>
-    <p>Currently only PDF and txt files under 25MB are supported.</p>
-</form>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css">
+<link rel="stylesheet" href="{{ url_for('static',filename='styles/milligram.css') }}">
+<title>Print @ Carnegie Mellon</title>
+
+<div class="container">
+  <br>
+  <h3>Print @ Carnegie Mellon</h3>
+  <form action="printfile" method=post enctype=multipart/form-data>
+    <label for="andrew_id">Andrew ID</label>
+    <input type="text" name="andrew_id" id="andrew_id" required>
+
+    <label for="upload_file">Upload your file</label>
+    <small>Supported files: .pdf and .txt under 25MB.</small>
+    <input type="file" name="file" id="upload_file" required>
+
+    <label for="copies"># of Copies</label>
+    <input name="copies" type="number" value="1" min="1" id="copies">
+
+    <label for="sides">Sidedness</label>
+    <select name="sides" id="sides">
+      <option value="one-sided" selected>One-sided</option>
+      <option value="two-sided-long-edge">Two-sided (portrait)</option>
+      <option value="two-sided-short-edge">Two-sided (landscape)</option>
+    </select>
+
+    <input type="submit" value=Upload>
+  </form>
+
+  <hr>
+
+  <p>Brought to you by <a href="http://scottylabs.org">ScottyLabs</a>. Source code available on <a href="http://github.com/scottylabs">GitHub</a>.</p>
+</div>
