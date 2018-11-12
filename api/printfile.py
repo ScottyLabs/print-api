@@ -2,6 +2,7 @@
 from api import app
 from flask import request, redirect, render_template, jsonify
 from subprocess import Popen, PIPE
+from werkzeug.utils import secure_filename
 
 LP_EXTENSIONS = {'pdf', 'txt'}
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
@@ -36,7 +37,11 @@ def has_andrew_id(request):
     """ Returns True if the request contains a plausible andrewID. Does not
     guarantee that the string is in fact a valid andrewID. """
     # TODO: Test the validity of the andrewID with the directory API!
-    return request.form[ANDREW_ID_KEY] and len(request.form[ANDREW_ID_KEY]) > 0
+    # Currently just checks if ID is alphanumeric
+    if not request.form[ANDREW_ID_KEY] or len(request.form[ANDREW_ID_KEY]) < 1:
+        return False
+
+    return request.form[ANDREW_ID_KEY].isalnum()
 
 def has_copies(request):
     """ Returns True if the request contains a non-zero number of copies """
@@ -71,28 +76,44 @@ def printfile():
         return response_print_error(request, "Please specify sidedness")
 
     # Retrieve file, andrew id, copies, and sidedness from request
+    # TODO Ensure ALL values are sanitized
     file = request.files[FILE_KEY]
     andrew_id = request.form[ANDREW_ID_KEY]
     copies = request.form[COPIES_KEY]
     sides = request.form[SIDES_KEY]
 
+
+    filename = secure_filename(file.filename)
+
     # TODO Improve logging mechanism
-    print("%s printed %s" % (andrew_id, file.filename))
+    print("%s printed %s" % (andrew_id, filename))
+    print("Form copies:", copies)
+    print("Form sides", sides)
+
+    if not copies.isdigit():
+        return response_print_error(request,
+                                    "Please enter a valid number of copies.")
 
     # Command line arguments for the lp command
     args = ["lp",
             "-U", andrew_id,
-            "-t", file.filename,
+            "-t", filename,
             "-n", copies,
-            "-o", "sides=" + sides,
+            "-o", "sides={}".format(sides),
             "-", # Force printing from stdin
             ]
+
+    # TODO Log args?
+    print(args)
 
     p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
     outs, errs = p.communicate(input=file.read())
     print("lp outs:", outs)
     print("lp errs:", errs)
-    return response_print_success("Successfully printed " + file.filename)
+    if errs:
+        # Return errors to JSON for now. Maybe security issue.
+        return response_print_error(request, "lp error:\n" + errs)
+    return response_print_success("Successfully printed " + filename)
 
 # Untested (NGINX will probably return first)
 @app.errorhandler(413)
