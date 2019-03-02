@@ -57,19 +57,36 @@
                     <td>file</td>
                     <td>Contents of a <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/file">file input</a> to print. Must be a PDF or txt document under 25MB.</td>
                 </tr>
+                <tr>
+                    <td><code>copies</code></td>
+                    <td>number</td>
+                    <td>Number of copies to print.</td>
+                </tr>
+                <tr>
+                    <td><code>sides</code></td>
+                    <td>radio</td>
+                    <td>The sidedness of the print job. Must be one of <code>one-sided</code>, <code>two-sided-long-edge</code>, <code>two-sided-short-edge</code>.</td>
+                </tr>
             </tbody>
         </table>
 
         <h4>Response format:</h4>
 
+        <p>A successful request:</p>
         <div class="highlight highlight-source-js"><pre>{
   "message": "Successfully printed Homework-1.pdf",
   "status_code": 200
 }</pre></div>
 
+        <p>A failed request. In this case, the status code will default to 400, Bad Request.</p>
+        <div class="highlight highlight-source-js"><pre>{
+  "message": "Please submit a valid Andrew ID.",
+  "status_code": 400
+}</pre></div>
+
         <h3>Example Application</h3>
 
-        <p>We have a (rough) example implementation of a web interface for you to play around with, and see how the API works. The demo is at <a href="https://scottylabs.org/print/">scottylabs.org/print</a>, and the code is available on <a href="https://github.com/scottylabs/print">GitHub</a>.</p>
+        <p>We have an example implementation of a web interface for you to play around with, and see how the API works. The demo is at <a href="https://scottylabs.org/print/">scottylabs.org/print</a>, and the code is available on <a href="https://github.com/scottylabs/print">GitHub</a>.</p>
 
     </section>
 
