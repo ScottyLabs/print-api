@@ -5,8 +5,14 @@ from subprocess import Popen, PIPE
 from werkzeug.utils import secure_filename
 import logging
 
-logging.basicConfig(filename="print.log", level=logging.INFO)
-logging.basicConfig(filename="debug.log", level=logging.DEBUG)
+dateFormat = "%Y-%m-%d %H:%M:%S"
+logFormat = logging.Formatter("[%(asctime)s] %(message)s", datefmt=dateFormat)
+logHandler = logging.FileHandler("print.log")
+logHandler.setFormatter(logFormat)
+
+logger = logging.getLogger("printLog")
+logger.setLevel(logging.INFO)
+logger.addHandler(logHandler)
 
 LP_EXTENSIONS = {'pdf', 'txt'}
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
@@ -89,9 +95,9 @@ def printfile():
 
     filename = secure_filename(file.filename)
 
-    logging.info("[%s] printed [%s]" % (str(andrew_id), filename))
-    logging.info("Form copies: [%s]" % (str(copies)))
-    logging.info("Form sides: [%s]" % (str(sides)))
+    logger.info("'%s' printed '%s'" % (str(andrew_id), filename))
+    logger.info("Form copies: %s" % (str(copies)))
+    logger.info("Form sides: %s" % (str(sides)))
 
     if not copies.isdigit():
         return response_print_error(request,
@@ -107,15 +113,17 @@ def printfile():
             "-", # Force printing from stdin
             ]
 
-    logging.info("Args: [%s]" % (str(args)))
+    logger.info("Args: '%s'" % (str(args)))
 
     # Start process to run lp command
     p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
     outs, errs = p.communicate(input=file.read())
 
-    logging.debug("LP Outs: [%s]" % str(outs))
-    logging.debug("LP Errs: [%s]" % str(errs))
     if errs:
+        logger.info("Error occured")
+        logger.info("LP Outs: '%s'" % str(outs))
+        logger.info("LP Errs: '%s'" % str(errs))
+        
         # Return errors to JSON for now. Maybe security issue.
         return response_print_error(request, "lp error:\n" + errs)
     return response_print_success("Successfully printed " + filename)
