@@ -3,6 +3,10 @@ from api import app
 from flask import request, redirect, render_template, jsonify
 from subprocess import Popen, PIPE
 from werkzeug.utils import secure_filename
+import logging
+
+logging.basicConfig(filename="print.log", level=logging.INFO)
+logging.basicConfig(filename="debug.log", level=logging.DEBUG)
 
 LP_EXTENSIONS = {'pdf', 'txt'}
 app.config["MAX_CONTENT_LENGTH"] = 25 * 1024 * 1024  # 25 Mb limit
@@ -50,7 +54,7 @@ def has_copies(request):
         result = copies > 0
     except:
         result = False
-    return result;
+    return result
 
 def has_sides(request):
     """ Returns True if the request contains a valid sidedness option """
@@ -81,20 +85,20 @@ def printfile():
     andrew_id = request.form[ANDREW_ID_KEY]
     copies = request.form[COPIES_KEY]
     sides = request.form[SIDES_KEY]
-
+    
 
     filename = secure_filename(file.filename)
 
-    # TODO Improve logging mechanism
-    print("%s printed %s" % (andrew_id, filename))
-    print("Form copies:", copies)
-    print("Form sides", sides)
+    logging.info("[%s] printed [%s]" % (str(andrew_id), filename))
+    logging.info("Form copies: [%s]" % (str(copies)))
+    logging.info("Form sides: [%s]" % (str(sides)))
 
     if not copies.isdigit():
         return response_print_error(request,
                                     "Please enter a valid number of copies.")
 
     # Command line arguments for the lp command
+    # Prints to the default printer
     args = ["lp",
             "-U", andrew_id,
             "-t", filename,
@@ -103,13 +107,14 @@ def printfile():
             "-", # Force printing from stdin
             ]
 
-    # TODO Log args?
-    print(args)
+    logging.info("Args: [%s]" % (str(args)))
 
+    # Start process to run lp command
     p = Popen(args, stdout=PIPE, stdin=PIPE, stderr=PIPE)
     outs, errs = p.communicate(input=file.read())
-    print("lp outs:", outs)
-    print("lp errs:", errs)
+
+    logging.debug("LP Outs: [%s]" % str(outs))
+    logging.debug("LP Errs: [%s]" % str(errs))
     if errs:
         # Return errors to JSON for now. Maybe security issue.
         return response_print_error(request, "lp error:\n" + errs)

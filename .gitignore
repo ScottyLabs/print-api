@@ -1,4 +1,7 @@
 *.pyc
+*.log
 
 # PyCharm 
 .idea/
+# VSCode
+.vscode/
