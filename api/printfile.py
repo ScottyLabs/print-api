@@ -34,6 +34,8 @@ def response_print_success(success_description=None):
 def has_printable_file(request):
     """ Returns True if the request contains a printable file, False otherwise. """
     # Checks for existance of file, and if the file has a printable extension
+    if FILE_KEY not in request.files:
+        return False
     try:
         file = request.files[FILE_KEY]
         result = file and \
@@ -48,13 +50,15 @@ def has_andrew_id(request):
     guarantee that the string is in fact a valid andrewID. """
     # TODO: Test the validity of the andrewID with the directory API!
     # Currently just checks if ID is alphanumeric
-    if not request.form[ANDREW_ID_KEY] or len(request.form[ANDREW_ID_KEY]) < 1:
+    if ANDREW_ID_KEY not in request.form or len(request.form[ANDREW_ID_KEY]) < 1:
         return False
 
     return request.form[ANDREW_ID_KEY].isalnum()
 
 def has_copies(request):
     """ Returns True if the request contains a non-zero number of copies """
+    if COPIES_KEY not in request.form:
+        return False
     try:
         copies = int(request.form[COPIES_KEY])
         result = copies > 0
@@ -64,7 +68,7 @@ def has_copies(request):
 
 def has_sides(request):
     """ Returns True if the request contains a valid sidedness option """
-    return request.form[SIDES_KEY] and \
+    return (SIDES_KEY in request.form) and \
         request.form[SIDES_KEY] in ["one-sided",
                                     "two-sided-long-edge",
                                     "two-sided-short-edge"]
@@ -92,9 +96,9 @@ def printfile():
     copies = request.form[COPIES_KEY]
     sides = request.form[SIDES_KEY]
     
-
     filename = secure_filename(file.filename)
 
+    logger.info("="*10)
     logger.info("'%s' printed '%s'" % (str(andrew_id), filename))
     logger.info("Form copies: %s" % (str(copies)))
     logger.info("Form sides: %s" % (str(sides)))
