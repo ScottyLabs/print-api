@@ -9,3 +9,5 @@ import api.index
 import api.upload
 # Print endpoint
 import api.printfile
+# Printer status endpoint
+import api.status
