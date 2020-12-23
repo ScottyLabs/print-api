@@ -3,15 +3,16 @@ import pytz
 
 
 class Printer:
-    def __init__(self, name, signal, lcd_message, status, tray_status, as_of):
+    def __init__(self, name, signal, lcd_message, status, tray_status, as_of, coordinates):
         self.name = name
         self.signal = signal
         self.lcd_message = lcd_message
         self.status = status
         self.tray_statuses = tray_status.split()
         self.as_of = as_of
-
-        self.color = "Color" in name
+        self.coordinates = coordinates
+        
+        self.color = ("Color" in name) or ("color" in name)
 
     def time_diff(self):
         us_east = pytz.timezone("US/Eastern")

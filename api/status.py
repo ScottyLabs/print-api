@@ -2,6 +2,7 @@ import requests, bs4
 from api import app
 from flask import request, redirect, render_template, jsonify
 from api.printer import Printer
+import random
 
 # Get all printer statuses
 @app.route("/status", methods=["GET"])
@@ -26,7 +27,8 @@ def get_printer_dict(printer):
       "status": printer.status,
       "tray_statuses": printer.tray_statuses,
       "timestamp": printer.as_of,
-      "color": printer.color
+      "color": printer.color,
+      "coordinates": printer.coordinates,
     }
 
 def get_printer_statuses():
@@ -51,6 +53,13 @@ def get_printer_statuses():
           else:
               data = c.get_text()
           kwargs[tag] = data
+        
+      TLLAT = 40.44811
+      TLLNG = -79.944967
+      kwargs['coordinates'] = {
+        'lat': round(TLLAT - (0.002 * random.random()), 5),
+        'lng': round(TLLNG - (0.002 * random.random()), 5),
+      }
 
       printers.append(Printer(**kwargs))
 
